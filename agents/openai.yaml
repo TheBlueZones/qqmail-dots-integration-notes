@@ -1,0 +1,4 @@
+interface:
+  display_name: "QQ Mail to Dot"
+  short_description: "Connect private QQ mail MCPs to Dot safely"
+  default_prompt: "Use $qqmail-dot-gateway to connect my private read-only QQ Mail MCP to Dot and verify mail access without changing unread state."
