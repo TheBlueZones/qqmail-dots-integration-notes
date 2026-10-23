@@ -1,4 +1,6 @@
-# 部署私有邮箱网关
+# QQ 邮箱接入 Dots：本次部署记录与复用注意
+
+供 Agent 按需查阅的实录附篇。以下配置和命令对应 [本次示例实现](../AGENT-GUIDE.md)，复用前先确认当前版本、环境和授权范围。
 
 ## 最小拓扑
 
@@ -12,13 +14,13 @@ flowchart LR
 
 网关代理后端暴露的工具，**不会自动删掉写工具**。只连接经过 `tools/list` 检查的只读服务。一个可选后端是独立部署的 [mail-mcp-suite Reader](https://github.com/federicokalik/mail-mcp-suite)；不要同时开放它的写入服务。
 
-## 先验证邮箱后端
+## 邮箱后端的验证要点
 
 在 QQ 邮箱当前设置中按官方流程开启 IMAP，必要的手机验证由用户完成。使用邮箱生成的授权码，不使用 QQ 登录密码。授权码留在后端 Secret 中；失败时确认验证流程和实际服务响应，不把“过期”提示一律归因于输入错误。
 
 核对当前工具集、认证和来源。已验证过的 Reader 工具名是 `mail_list_mailboxes`、`mail_search`、`mail_get_message`；这是特定后端的接口，不是 MCP 标准。固定镜像 digest 和版本，升级后再查工具集和副作用。
 
-## 配置本仓库
+## 示例网关的配置约束
 
 Python 3.12，FastMCP 4.1.3。以下变量由 `gateway.py` 校验；必需值缺失时启动失败。
 
@@ -64,7 +66,7 @@ docker build --platform linux/amd64 -t private-mail-gateway:local .
 
 `/healthz` 仅检查进程，不检查 GitHub 或邮箱。FastMCP 的授权状态使用稳定签名密钥派生的加密存储；丢失状态目录或更换密钥会影响既有授权。备份中仍包含敏感认证材料，按 Secret 保护。
 
-## Openship 适配
+## 本次 Openship 部署遇到的问题
 
 检查当前安装版本、MCP 工具 schema、项目权限和服务器归属，再选择受支持操作；不要复制另一台机器的服务器 ID、OAuth 凭据或路径。
 
