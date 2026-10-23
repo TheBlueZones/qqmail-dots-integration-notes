@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-    D[Dot / ChatGPT] -->|OAuth + PKCE| G[本仓库 OAuth 网关]
+    D[Dots / ChatGPT] -->|OAuth + PKCE| G[本仓库 OAuth 网关]
     G -->|公开身份校验| H[GitHub]
     G -->|固定 Bearer| R[只读 Mail MCP]
     R -->|IMAP 授权码| Q[QQ 邮箱]
@@ -30,7 +30,7 @@ Python 3.12，FastMCP 4.1.3。以下变量由 `gateway.py` 校验；必需值缺
 | `CHATGPT_REDIRECT_URI` | 当前客户端显示的精确回调 |
 | `JWT_SIGNING_KEY` | 至少 32 字符的稳定高熵秘密，备份并限制访问 |
 | `FASTMCP_HOME` | 可持久写入的绝对目录；容器默认 `/data/fastmcp` |
-| `MAIL_BACKEND_URL` | 已有只读 MCP 地址；不能回指本网关 |
+| `MAIL_BACKEND_URL` | 已有只读 MCP 地址；不能回指本网关。公网使用 HTTPS；HTTP 仅用于受保护的本地或私网链路 |
 | `MAIL_BACKEND_TOKEN` | 后端固定 Bearer 的 token 部分，不含 `Bearer ` 前缀 |
 | `MAIL_BACKEND_HOST` | 可选 Host 覆盖，默认取后端 URL 的 authority |
 
@@ -48,6 +48,8 @@ GitHub OAuth App 的回调是 `${PUBLIC_BASE_URL}/auth/callback`。ChatGPT 回�
 python3.12 -m venv .venv
 .venv/bin/python -m pip install --require-hashes -r requirements-test.txt
 .venv/bin/python -m pytest -q
+# 通过外部 Secret 或受保护的运行配置注入必需变量后：
+.venv/bin/python gateway.py
 ```
 
 把真实配置保存在仓库外的 Secret 管理器或私有运行目录。目录 `0700`、文件 `0600`；不要通过 `set -x`、完整环境输出或带凭据的命令行传递。
@@ -75,5 +77,7 @@ docker build --platform linux/amd64 -t private-mail-gateway:local .
 7. 验证导入后的平台、镜像 config digest 与有序 RootFS DiffIDs。不同 Docker 存储格式的 manifest ID 和 config ID 可能不同，不因显示值不同就误判损坏。
 
 资源容量按实测决定。一次单用户样本在 `192 MiB / 0.25 CPU` 上运行，启动测试峰值约 133 MiB；这不证明并发、大附件或所有机器都适用。
+
+FastMCP 与 MCP SDK 各自保留原有许可证。网关源码和经验文档的 MIT 许可证不会更改这些依赖或独立邮件后端的许可。
 
 如果平台能力或权限不足，给出具体缺口；使用已授权、受支持的替代入口。不要提取其它客户端秘密或篡改权限来维持自动化。

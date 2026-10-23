@@ -2,7 +2,7 @@
 
 | 现象 | 先确认 | 处理边界 |
 | --- | --- | --- |
-| Codex 成功，Dot 不可用 | 两端的认证、工具列表与执行位置 | Codex 配置不自动同步到 Dot 云端 |
+| Codex 成功，Dots 不可用 | 两端的认证、工具列表与执行位置 | Codex 配置不自动同步到 Dots 云端 |
 | 上传插件后要求桌面执行器 | `requires_local_executor` 和实际工具类型 | 不能靠修改标记让本地代码成为云服务 |
 | 表单没有 API-key 选项 | 当前账号实际可见选项 | 选择受支持 OAuth 入口，不以 None 暴露邮箱 |
 | `Client Not Registered` | CIMD 元数据请求是否成功、是否合法 | 双方支持 DCR 时切换客户端注册方式，保留 PKCE/回调限制 |
